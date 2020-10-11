@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Player</string>
+
+    <!--ContentDescription-->
+    <string name="contentDescription_image_song">Image song</string>
+
+
+</resources>
