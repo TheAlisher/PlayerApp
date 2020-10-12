@@ -1,11 +1,11 @@
-package com.alis.player.ui.main
+package com.alis.player.ui.songs
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.alis.player.models.Song
 import com.alis.player.repository.SongRepository
 
-class MainViewModel(private val songRepository: SongRepository) : ViewModel() {
+class SongViewModel(private val songRepository: SongRepository) : ViewModel() {
 
     var song: MutableLiveData<MutableList<Song>> = MutableLiveData()
 

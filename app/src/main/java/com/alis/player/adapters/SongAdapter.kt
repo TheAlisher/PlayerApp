@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.item_songs.view.*
 class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
 
     private val list = mutableListOf<Song>()
+    private lateinit var onItemClickListener: OnItemClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         return SongViewHolder(
@@ -21,6 +22,9 @@ class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         holder.onBind(list[position])
+        holder.itemView.setOnClickListener{
+            onItemClickListener.onItemClick(list[position])
+        }
     }
 
     override fun getItemCount(): Int = list.size
@@ -30,12 +34,20 @@ class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
         notifyDataSetChanged()
     }
 
+    fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {
+        this.onItemClickListener = onItemClickListener
+    }
+
     class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun onBind(song: Song) {
             itemView.image_songs.loadImage(song.coverImage, R.drawable.default_image_album)
             itemView.text_songs_name.text = song.song
-            itemView.text_songs_artist.text = song.artists
+            itemView.text_songs_artist.text = song.artist
         }
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(item: Song)
     }
 }

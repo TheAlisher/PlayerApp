@@ -3,6 +3,9 @@
 
     <!--ContentDescription-->
     <string name="contentDescription_image_song">Image song</string>
+    <string name="contentDescription_icon_previous">Icon back</string>
+    <string name="contentDescription_icon_pause_play">Icon pause/play</string>
+    <string name="contentDescription_icon_next">Icon next</string>
 
 
 </resources>
