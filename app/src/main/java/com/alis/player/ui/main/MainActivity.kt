@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchCover() {
-        viewModel.fetchCover().observe(this, {
+        viewModel.fetchSong().observe(this, {
             songAdapter.addAll(it)
         })
     }

@@ -9,7 +9,7 @@ class MainViewModel(private val songRepository: SongRepository) : ViewModel() {
 
     val cover: MutableLiveData<MutableList<Song>> = MutableLiveData()
 
-    fun fetchCover(): MutableLiveData<MutableList<Song>> {
-        return songRepository.fetchCover()
+    fun fetchSong(): MutableLiveData<MutableList<Song>> {
+        return songRepository.fetchSong()
     }
 }

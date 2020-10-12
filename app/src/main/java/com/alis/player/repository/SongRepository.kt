@@ -10,7 +10,7 @@ import retrofit2.Response
 
 class SongRepository(private val coverAPI: SongAPI) {
 
-    fun fetchCover(): MutableLiveData<MutableList<Song>> {
+    fun fetchSong(): MutableLiveData<MutableList<Song>> {
         val data: MutableLiveData<MutableList<Song>> = MutableLiveData()
         coverAPI.fetchSong()
             .enqueue(object : Callback<MutableList<Song>> {
