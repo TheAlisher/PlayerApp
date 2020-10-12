@@ -8,11 +8,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SongRepository(private val coverAPI: SongAPI) {
+class SongRepository(private val songAPI: SongAPI) {
 
     fun fetchSong(): MutableLiveData<MutableList<Song>> {
         val data: MutableLiveData<MutableList<Song>> = MutableLiveData()
-        coverAPI.fetchSong()
+        songAPI.fetchSong()
             .enqueue(object : Callback<MutableList<Song>> {
                 override fun onResponse(
                     call: Call<MutableList<Song>>,

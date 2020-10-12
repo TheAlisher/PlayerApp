@@ -7,9 +7,13 @@ import com.alis.player.repository.SongRepository
 
 class MainViewModel(private val songRepository: SongRepository) : ViewModel() {
 
-    val cover: MutableLiveData<MutableList<Song>> = MutableLiveData()
+    var song: MutableLiveData<MutableList<Song>> = MutableLiveData()
 
-    fun fetchSong(): MutableLiveData<MutableList<Song>> {
-        return songRepository.fetchSong()
+    init {
+        fetchSong()
+    }
+
+    private fun fetchSong() {
+        song = songRepository.fetchSong()
     }
 }

@@ -1,6 +1,5 @@
 package com.alis.player.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,7 +36,6 @@ class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
             itemView.image_songs.loadImage(song.coverImage, R.drawable.default_image_album)
             itemView.text_songs_name.text = song.song
             itemView.text_songs_artist.text = song.artists
-            Log.d("anime", song.song.toString())
         }
     }
 }
