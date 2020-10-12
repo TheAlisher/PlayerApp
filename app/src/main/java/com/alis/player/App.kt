@@ -1,7 +1,7 @@
 package com.alis.player
 
 import android.app.Application
-import com.alis.player.di.coverModule
+import com.alis.player.di.songModule
 import org.koin.core.context.startKoin
 
 class App : Application() {
@@ -10,7 +10,7 @@ class App : Application() {
         super.onCreate()
         startKoin {
             this@App
-            modules(coverModule)
+            modules(songModule)
         }
     }
 }

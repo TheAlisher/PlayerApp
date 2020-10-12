@@ -7,5 +7,5 @@ import retrofit2.http.GET
 interface SongAPI {
 
     @GET("studio")
-    fun fetchCover(): Call<MutableList<Song>>
+    fun fetchSong(): Call<MutableList<Song>>
 }

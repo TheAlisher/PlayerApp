@@ -12,7 +12,7 @@ class SongRepository(private val coverAPI: SongAPI) {
 
     fun fetchCover(): MutableLiveData<MutableList<Song>> {
         val data: MutableLiveData<MutableList<Song>> = MutableLiveData()
-        coverAPI.fetchCover()
+        coverAPI.fetchSong()
             .enqueue(object : Callback<MutableList<Song>> {
                 override fun onResponse(
                     call: Call<MutableList<Song>>,

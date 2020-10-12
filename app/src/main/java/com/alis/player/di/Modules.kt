@@ -6,9 +6,9 @@ import com.alis.player.ui.main.MainViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-var coverModule = module {
+var songModule = module {
 
-    single { RetrofitClient().provideCover() }
+    single { RetrofitClient().provideSong() }
 
     factory { SongRepository(get()) }
 
