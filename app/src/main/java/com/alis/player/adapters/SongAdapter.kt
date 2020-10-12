@@ -10,9 +10,9 @@ import com.alis.player.extension.loadImage
 import com.alis.player.models.Song
 import kotlinx.android.synthetic.main.item_songs.view.*
 
-class SongAdapter(
-    private val list: MutableList<Song>
-) : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
+class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
+
+    private val list = mutableListOf<Song>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         return SongViewHolder(

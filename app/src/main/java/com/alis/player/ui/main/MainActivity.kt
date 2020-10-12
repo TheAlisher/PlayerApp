@@ -14,7 +14,6 @@ class MainActivity : AppCompatActivity() {
     private val viewModel by viewModel<MainViewModel>()
 
     private lateinit var songAdapter: SongAdapter
-    private var songList: MutableList<Song> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createSongRecycler() {
-        songAdapter = SongAdapter(songList)
+        songAdapter = SongAdapter()
         recycler_main.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = songAdapter
