@@ -8,11 +8,11 @@ interface SimpleSeekBarChangeListener : SeekBar.OnSeekBarChangeListener {
 
     }
 
-    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+    override fun onStartTrackingTouch(seekBar: SeekBar) {
 
     }
 
-    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+    override fun onStopTrackingTouch(seekBar: SeekBar) {
 
     }
 }
