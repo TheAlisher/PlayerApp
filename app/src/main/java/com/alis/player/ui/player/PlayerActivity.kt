@@ -109,9 +109,9 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
+    override fun onDestroy() {
         mediaPlayer.stop()
-        super.onBackPressed()
+        super.onDestroy()
     }
 
     companion object {
