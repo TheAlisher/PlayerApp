@@ -6,8 +6,10 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.alis.player.R
 import com.alis.player.extension.loadImage
 import com.alis.player.models.Song
@@ -32,8 +34,8 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        this.setSongData()
-        startPlayer()
+        setSongData()
+        initializeViews()
         setUpListeners()
     }
 
@@ -43,8 +45,11 @@ class PlayerActivity : AppCompatActivity() {
         text_player_artist.text = item.artist
     }
 
-    private fun startPlayer() {
-        val url = item.url
+    private fun initializeViews() {
+        createPlayer()
+    }
+
+    private fun createPlayer() {
         mediaPlayer = MediaPlayer().apply {
             setAudioAttributes(
                 AudioAttributes.Builder()
@@ -52,17 +57,12 @@ class PlayerActivity : AppCompatActivity() {
                     .setUsage(AudioAttributes.USAGE_MEDIA)
                     .build()
             )
-            setDataSource(url)
-            prepare()
-            start()
-            handler.postDelayed(runnable, 1000)
         }
     }
 
     private fun updateSeekBar() {
         if (mediaPlayer.isPlaying) {
-            seek_player.progress =
-                ((mediaPlayer.currentPosition.toFloat() / mediaPlayer.duration) * 100).toInt()
+            seek_player.progress = mediaPlayer.currentPosition / 1000
         }
     }
 
@@ -75,9 +75,15 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun slideSeekPlayer() {
         seek_player.setOnSeekBarChangeListener(object : SimpleSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, p1: Int, p2: Boolean) {
-                val playPosition: Int = (mediaPlayer.duration / 100) * seekBar.progress
-                mediaPlayer.seekTo(playPosition)
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                mediaPlayer.pause()
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                mediaPlayer.seekTo(seekBar.progress * 1000)
+                if (viewModel.isPauseOrPlay.value!!) {
+                    mediaPlayer.start()
+                }
             }
         })
     }
@@ -88,18 +94,18 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private var isPause: Boolean = true
-
     private fun clickPausePlay() {
         image_player_pause_play.setOnClickListener {
-            if (isPause) {
-                mediaPlayer.pause()
-                image_player_pause_play.setImageResource(R.drawable.icon_play)
-            } else {
-                mediaPlayer.start()
-                image_player_pause_play.setImageResource(R.drawable.icon_pause)
-            }
-            isPause = !isPause
+            viewModel.isPauseOrPlay.observe(this, Observer {
+                if (it) {
+                    mediaPlayer.pause()
+                    image_player_pause_play.setImageResource(R.drawable.icon_play)
+                } else {
+                    mediaPlayer.start()
+                    image_player_pause_play.setImageResource(R.drawable.icon_pause)
+                }
+            })
+            viewModel.isPauseOrPlay.value = !viewModel.isPauseOrPlay.value!!
         }
     }
 
@@ -107,6 +113,21 @@ class PlayerActivity : AppCompatActivity() {
         image_player_next.setOnClickListener {
 
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        parseSong()
+    }
+
+    private fun parseSong() {
+        mediaPlayer.apply {
+            setDataSource(item.url)
+            prepare()
+            start()
+        }
+        seek_player.max = mediaPlayer.duration / 1000
+        handler.postDelayed(runnable, 1000)
     }
 
     override fun onDestroy() {
