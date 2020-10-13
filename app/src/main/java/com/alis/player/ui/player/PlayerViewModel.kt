@@ -1,9 +1,9 @@
 package com.alis.player.ui.player
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.alis.player.base.BaseViewModel
 
-class PlayerViewModel : ViewModel() {
+class PlayerViewModel : BaseViewModel() {
 
     var isPauseOrPlay: MutableLiveData<Boolean> = MutableLiveData()
 

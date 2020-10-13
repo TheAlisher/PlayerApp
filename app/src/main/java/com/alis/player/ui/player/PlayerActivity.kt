@@ -11,15 +11,27 @@ import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.alis.player.R
+import com.alis.player.base.BaseActivity
 import com.alis.player.extension.loadImage
 import com.alis.player.models.Song
 import com.alis.player.utils.SimpleSeekBarChangeListener
 import kotlinx.android.synthetic.main.activity_player.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerActivity : BaseActivity<PlayerViewModel>(R.layout.activity_player) {
 
-    private val viewModel by viewModel<PlayerViewModel>()
+    override fun onResume() {
+        super.onResume()
+        parseSong()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.stop()
+    }
+
+    override val viewModel by inject<PlayerViewModel>()
 
     private lateinit var mediaPlayer: MediaPlayer
     private var handler = Handler()
@@ -30,23 +42,26 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_player)
-
+    override fun initializeViews() {
         setSongData()
-        initializeViews()
-        setUpListeners()
+        createPlayer()
+    }
+
+    override fun setUpObservers() {
+
+    }
+
+    override fun setUpListeners() {
+        slideSeekPlayer()
+        clickPrevious()
+        clickPausePlay()
+        clickNext()
     }
 
     private fun setSongData() {
         image_player_song.loadImage(placeholder = R.drawable.default_image_album)
         text_player_name.text = item.song
         text_player_artist.text = item.artist
-    }
-
-    private fun initializeViews() {
-        createPlayer()
     }
 
     private fun createPlayer() {
@@ -66,13 +81,6 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpListeners() {
-        slideSeekPlayer()
-        clickPrevious()
-        clickPausePlay()
-        clickNext()
-    }
-
     private fun slideSeekPlayer() {
         seek_player.setOnSeekBarChangeListener(object : SimpleSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -81,7 +89,7 @@ class PlayerActivity : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 mediaPlayer.seekTo(seekBar.progress * 1000)
-                if (viewModel.isPauseOrPlay.value!!) {
+                if (!viewModel.isPauseOrPlay.value!!) {
                     mediaPlayer.start()
                 }
             }
@@ -96,7 +104,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun clickPausePlay() {
         image_player_pause_play.setOnClickListener {
-            viewModel.isPauseOrPlay.observe(this, Observer {
+            viewModel.isPauseOrPlay.observe(this, {
                 if (it) {
                     mediaPlayer.pause()
                     image_player_pause_play.setImageResource(R.drawable.icon_play)
@@ -115,11 +123,6 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        parseSong()
-    }
-
     private fun parseSong() {
         mediaPlayer.apply {
             setDataSource(item.url)
@@ -128,11 +131,6 @@ class PlayerActivity : AppCompatActivity() {
         }
         seek_player.max = mediaPlayer.duration / 1000
         handler.postDelayed(runnable, 1000)
-    }
-
-    override fun onDestroy() {
-        mediaPlayer.stop()
-        super.onDestroy()
     }
 
     companion object {
