@@ -8,6 +8,6 @@ class PlayerViewModel : BaseViewModel() {
     var isPauseOrPlay: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
-        isPauseOrPlay.value = true
+        isPauseOrPlay.value = false
     }
 }
