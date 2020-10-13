@@ -36,7 +36,6 @@ class SongActivity : AppCompatActivity() {
 
     private fun setUpListeners() {
         songAdapter.setOnItemClickListener(object : SongAdapter.OnItemClickListener {
-
             override fun onItemClick(item: Song) {
                 PlayerActivity.start(this@SongActivity, item)
             }
