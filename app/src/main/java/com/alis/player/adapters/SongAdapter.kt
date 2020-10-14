@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.alis.player.R
-import com.alis.player.extension.loadImage
+import com.alis.player.extension.loadRoundImage
 import com.alis.player.models.Song
 import kotlinx.android.synthetic.main.item_songs.view.*
 
@@ -22,7 +22,7 @@ class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         holder.onBind(list[position])
-        holder.itemView.setOnClickListener{
+        holder.itemView.setOnClickListener {
             onItemClickListener.onItemClick(list[position])
         }
     }
@@ -41,7 +41,11 @@ class SongAdapter : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
     class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun onBind(song: Song) {
-            itemView.image_songs.loadImage(song.coverImage, R.drawable.default_image_album)
+            itemView.image_songs.loadRoundImage(
+                song.coverImage,
+                R.drawable.default_image_album,
+                20
+            )
             itemView.text_songs_name.text = song.song
             itemView.text_songs_artist.text = song.artist
         }
