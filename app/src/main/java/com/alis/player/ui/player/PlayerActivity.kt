@@ -4,20 +4,17 @@ import android.app.Activity
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.widget.SeekBar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import com.alis.player.R
 import com.alis.player.base.BaseActivity
+import com.alis.player.extension.gone
 import com.alis.player.extension.loadImage
+import com.alis.player.extension.visible
 import com.alis.player.models.Song
 import com.alis.player.utils.SimpleSeekBarChangeListener
 import kotlinx.android.synthetic.main.activity_player.*
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : BaseActivity<PlayerViewModel>(R.layout.activity_player) {
 
@@ -83,13 +80,9 @@ class PlayerActivity : BaseActivity<PlayerViewModel>(R.layout.activity_player) {
 
     private fun slideSeekPlayer() {
         seek_player.setOnSeekBarChangeListener(object : SimpleSeekBarChangeListener {
-            override fun onStartTrackingTouch(seekBar: SeekBar) {
-                mediaPlayer.pause()
-            }
-
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 mediaPlayer.seekTo(seekBar.progress * 1000)
-                if (!viewModel.isPauseOrPlay.value!!) {
+                if (mediaPlayer.isPlaying) {
                     mediaPlayer.start()
                 }
             }
@@ -104,16 +97,13 @@ class PlayerActivity : BaseActivity<PlayerViewModel>(R.layout.activity_player) {
 
     private fun clickPausePlay() {
         image_player_pause_play.setOnClickListener {
-            viewModel.isPauseOrPlay.observe(this, {
-                if (it) {
-                    mediaPlayer.pause()
-                    image_player_pause_play.setImageResource(R.drawable.icon_play)
-                } else {
-                    mediaPlayer.start()
-                    image_player_pause_play.setImageResource(R.drawable.icon_pause)
-                }
-            })
-            viewModel.isPauseOrPlay.value = !viewModel.isPauseOrPlay.value!!
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.pause()
+                image_player_pause_play.setImageResource(R.drawable.icon_play)
+            } else {
+                mediaPlayer.start()
+                image_player_pause_play.setImageResource(R.drawable.icon_pause)
+            }
         }
     }
 
@@ -126,11 +116,15 @@ class PlayerActivity : BaseActivity<PlayerViewModel>(R.layout.activity_player) {
     private fun parseSong() {
         mediaPlayer.apply {
             setDataSource(item.url)
-            prepare()
-            start()
+            prepareAsync()
+            progress_player.visible()
+            setOnPreparedListener {
+                progress_player.gone()
+                start()
+                seek_player.max = mediaPlayer.duration / 1000
+                handler.postDelayed(runnable, 1000)
+            }
         }
-        seek_player.max = mediaPlayer.duration / 1000
-        handler.postDelayed(runnable, 1000)
     }
 
     companion object {
