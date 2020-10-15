@@ -2,11 +2,11 @@ package com.alis.player.ui.songs
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alis.player.R
 import com.alis.player.adapters.SongAdapter
 import com.alis.player.models.Song
+import com.alis.player.network.Status
 import com.alis.player.ui.player.PlayerActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -22,8 +22,8 @@ class SongActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         createSongRecycler()
-        fetchCover()
         setUpListeners()
+        subscribeToSong()
     }
 
     private fun createSongRecycler() {
@@ -42,9 +42,11 @@ class SongActivity : AppCompatActivity() {
         })
     }
 
-    private fun fetchCover() {
-        viewModel.song.observe(this, Observer {
-            songAdapter.addAll(it)
+    private fun subscribeToSong() {
+        viewModel.song.observe(this, {
+            when (it.status) {
+                Status.SUCCESS -> songAdapter.addAll(it.data!!)
+            }
         })
     }
 }
