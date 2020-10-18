@@ -18,6 +18,15 @@ import org.koin.android.ext.android.inject
 
 class PlayerActivity : BaseActivity<PlayerViewModel>(R.layout.activity_player) {
 
+    companion object {
+        private lateinit var item: Song
+        fun start(activity: Activity, item: Song) {
+            this.item = item
+            val intent = Intent(activity, PlayerActivity::class.java)
+            activity.startActivity(intent)
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         parseSong()
@@ -124,15 +133,6 @@ class PlayerActivity : BaseActivity<PlayerViewModel>(R.layout.activity_player) {
                 seek_player.max = mediaPlayer.duration / 1000
                 handler.postDelayed(runnable, 1000)
             }
-        }
-    }
-
-    companion object {
-        private lateinit var item: Song
-        fun start(activity: Activity, item: Song) {
-            this.item = item
-            val intent = Intent(activity, PlayerActivity::class.java)
-            activity.startActivity(intent)
         }
     }
 }
